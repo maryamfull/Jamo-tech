@@ -1,0 +1,256 @@
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+button[type="submit"] {
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.navbar {
+  border-bottom: 2px solid #444;
+}
+
+.navbar-brand img {
+  border-radius: 5px;
+}
+
+.navbar-nav .nav-link {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #555;
+  color: #fff !important;
+}
+
+.product-logo {
+  width: 200px;
+  text-align: center;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.total-price {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.cart-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 0px;
+  margin-right: 20px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer {
+  background-color: black;
+  padding: 8px 0px;
+  color: white;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  margin-top: 20px;
+  left: 0;
+}
+
+.auth_header {
+  background-color: black;
+  padding: 8px 0px;
+  color: white;
+  padding-left: 20px;
+}
+
+
+.mr-4 {
+  margin-right: 20px;
+}
+
+.header-bg {
+  background-color: black;
+  color: white;
+}
+
+.login-cnt {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 50%;
+  
+}
+
+.signupbtn {
+  font-weight: 600;
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+.login-heading {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.err-msg {
+  color: red;
+  font-size: 12px;
+}
+
+label {
+  font-weight: 600;
+  width: 200px;
+}
+
+.usernameinput,
+.passwordinput {
+  background: white;
+  width: 260px;
+  border-radius: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+
+.loginBtn {
+  background-color: rgb(157, 232, 157);
+  color: black;
+  font-size: 20px;
+  border-radius: 5px;
+  width: 30%;
+  margin: auto;
+  margin-top: 60px;
+  outline: none;
+  border: none;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+.if-you {
+  color: black;
+  margin: auto;
+}
+
+.height_full {
+  min-height: 100vh;
+  position: relative;
+}
+
+.theme-bg {
+  background-color: #e9ecef;
+}
+
+.selected_img{
+  width: 300px;
+}
+
+
+
+
+
+.likesImg{
+  width: 20px;
+  height: 20px;
+}
+.like-btn.active, .like-btn:hover {
+  background-color: #28a745;
+  color: white;
+  transform: scale(1.05);
+}
+
+.dislike-btn.active, .dislike-btn:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: scale(1.05);
+}
+
+button {
+  transition: all 0.2s ease;
+}
+
+.badge {
+  transition: transform 0.2s ease;
+}
+
+.like-btn.active .badge,
+.dislike-btn.active .badge {
+  transform: scale(1.2);
+}
+
+
+.feedback-card {
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 1rem;
+}
+
+.star-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.star-icon:hover {
+  transform: scale(1.2);
+}
+
+
+.product-feedback-card{
+  padding: 20px;
+}
+
+p{
+  margin-bottom: 0px;
+}
+
+.product-feedback-card img {
+  object-fit: cover;
+  height: 400px;
+  width: 100%;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.card-body {
+  padding: 1rem 1.5rem;
+}
+
+.mb-100{
+  margin-bottom: 100px;
+}
+
+.fb-img{
+  width: 400px;
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  .product-feedback-card .row {
+    flex-direction: column;
+  }
+}
