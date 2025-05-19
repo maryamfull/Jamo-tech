@@ -6,14 +6,14 @@ import { User } from "./models/user.model";
 import Product from "./models/product.model";
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import { Order } from "./models/order.schema";
 import { Feebackss } from "./models/feedback.schema";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-app.use('/temp', express.static(path.join(__dirname, 'temp')));
+app.use("/temp", express.static(path.join(__dirname, "temp")));
 app.use(
   cors({
     origin: ENV_VARS.CORS_ORIGIN,
@@ -29,15 +29,15 @@ app.use(
   })
 );
 
-mongoose.connect(process.env.MONGO_URI || ENV_VARS.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
+mongoose
+  .connect(process.env.MONGO_URI || ENV_VARS.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'temp'));
+    cb(null, path.join(__dirname, "temp"));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -48,37 +48,39 @@ const upload = multer({ storage });
 
 app.post("/login", async (req, res) => {
   // get data from req.body
-  const { password, username } = req.body
+  const { password, username } = req.body;
   try {
     // username or email
     if (!username) {
-      return res
-        .status(400)
-        .json({ message: "username  is required" });
+      return res.status(400).json({ message: "username  is required" });
     }
 
     // find the user
     const userDB = await User.findOne({
-      $or: [{ username }]
-    })
+      $or: [{ username }],
+    });
     if (!userDB) {
-      return res
-        .status(400)
-        .json({ message: "user does not exist" });
+      return res.status(400).json({ message: "user does not exist" });
     }
 
     if (password !== userDB.password) {
-      return res.status(400).json({ message: 'Invalid username or password' });
+      return res.status(400).json({ message: "Invalid username or password" });
     }
 
-    const loggedInUser = await User.findById(userDB._id).select(
-      "-password"
-    );
-    res.status(200).json({ user: loggedInUser, login: true, message: "User logged In Successfully" });
+    const loggedInUser = await User.findById(userDB._id).select("-password");
+    res
+      .status(200)
+      .json({
+        user: loggedInUser,
+        login: true,
+        message: "User logged In Successfully",
+      });
   } catch (err) {
-    res.status(500).json({ message: 'Error logging in', login: false, error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error logging in", login: false, error: err.message });
   }
-})
+});
 
 app.post("/register", async (req, res) => {
   const { username, email, password, userType } = req.body;
@@ -90,17 +92,13 @@ app.post("/register", async (req, res) => {
   if (
     [username, email, password, userType].some((field) => field?.trim() === "")
   ) {
-    return res
-      .status(400)
-      .json({ message: "All fields are Required" });
+    return res.status(400).json({ message: "All fields are Required" });
   }
 
   // check if user already exists: username,email
   const existedUser = await User.findOne({ $or: [{ username }, { email }] });
   if (existedUser) {
-    return res
-      .status(400)
-      .json({ message: "User already exist" });
+    return res.status(400).json({ message: "User already exist" });
   }
 
   // create user object - create entry in db
@@ -108,13 +106,11 @@ app.post("/register", async (req, res) => {
     email,
     password,
     username: username.toLowerCase(),
-    userType
+    userType,
   });
 
   // remove password  field from response
-  const createdUser = await User.findById(user._id).select(
-    "-password"
-  );
+  const createdUser = await User.findById(user._id).select("-password");
 
   if (!createdUser) {
     return res
@@ -124,14 +120,18 @@ app.post("/register", async (req, res) => {
 
   return res
     .status(201)
-    .json({ user: createdUser, register: true, message: "User registered successfully" });
-})
+    .json({
+      user: createdUser,
+      register: true,
+      message: "User registered successfully",
+    });
+});
 
-app.post('/add-Product', upload.single('image'), async (req, res) => {
+app.post("/add-Product", upload.single("image"), async (req, res) => {
   try {
     const { title, price, description } = req.body;
     if (!req.file) {
-      return res.status(400).json({ message: 'Image file is required' });
+      return res.status(400).json({ message: "Image file is required" });
     }
 
     const encodedFilename = encodeURIComponent(req.file.filename);
@@ -147,18 +147,20 @@ app.post('/add-Product', upload.single('image'), async (req, res) => {
     });
     await newProduct.save();
 
-    res.status(200).json({ message: 'Product added successfully', Product: newProduct });
+    res
+      .status(200)
+      .json({ message: "Product added successfully", Product: newProduct });
   } catch (err) {
-    res.status(500).json({ message: 'Error adding Product', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error adding Product", error: err.message });
   }
 });
 
 app.get("/get-all-products", async (req, res) => {
   const Products = await Product.find();
-  return res
-    .status(200)
-    .json({ data: Products, status: true, });
-})
+  return res.status(200).json({ data: Products, status: true });
+});
 
 // Route to handle product purchase
 app.post("/buy", async (req, res) => {
@@ -175,7 +177,10 @@ app.post("/buy", async (req, res) => {
     // Process each product in the purchase
     for (let item of products) {
       const product = await Product.findById(item.productId);
-      if (!product) return res.status(404).json({ message: `Product with ID ${item.productId} not found` });
+      if (!product)
+        return res
+          .status(404)
+          .json({ message: `Product with ID ${item.productId} not found` });
 
       // Calculate the total amount (product price * quantity)
       totalAmount += product.price * item.quantity;
@@ -197,10 +202,14 @@ app.post("/buy", async (req, res) => {
 
     await order.save();
 
-    return res.status(201).json({ message: "Order placed successfully", order });
+    return res
+      .status(201)
+      .json({ message: "Order placed successfully", order });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "An error occurred while processing your order" });
+    return res
+      .status(500)
+      .json({ message: "An error occurred while processing your order" });
   }
 });
 
@@ -209,7 +218,9 @@ app.post("/product/:productId/react", async (req, res) => {
   const { userId, type } = req.body; // type: "like" or "dislike"
 
   if (!["like", "dislike"].includes(type)) {
-    return res.status(400).json({ message: "Invalid type. Must be 'like' or 'dislike'." });
+    return res
+      .status(400)
+      .json({ message: "Invalid type. Must be 'like' or 'dislike'." });
   }
 
   try {
@@ -241,11 +252,13 @@ app.post("/product/:productId/react", async (req, res) => {
       message: `${type === "like" ? "Like" : "Dislike"} updated`,
       likes: product.likes.length,
       dislikes: product.dislikes.length,
-      status: "success"
+      status: "success",
     });
   } catch (error) {
-    console.log("err",error)
-    return res.status(500).json({ message: "Internal server error", status: "fail" });
+    console.log("err", error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", status: "fail" });
   }
 });
 
@@ -268,7 +281,7 @@ app.post("/product/:productId/feedback", async (req, res) => {
     return res.status(201).json({
       message: "Feedback submitted successfully",
       feedbacks: product.feedbacks,
-      status: "success"
+      status: "success",
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
@@ -276,31 +289,29 @@ app.post("/product/:productId/feedback", async (req, res) => {
 });
 
 // GET /api/feedback/:productId
-app.get('/feedback/:productId', async (req, res) => {
+app.get("/feedback/:productId", async (req, res) => {
   const { productId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    return res.status(400).json({ error: 'Invalid product ID' });
+    return res.status(400).json({ error: "Invalid product ID" });
   }
   try {
     const product = await Product.findById(productId)
       .populate({
-        path: 'feedbacks.user',
-        select: 'username email'
+        path: "feedbacks.user",
+        select: "username email",
       })
-      .populate('likes', 'username')
-      .populate('dislikes', 'username');
+      .populate("likes", "username")
+      .populate("dislikes", "username");
 
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     return res.status(200).json({ product, status: true });
   } catch (error) {
-    return res.status(500).json({ error: 'Server error', status: false });
+    return res.status(500).json({ error: "Server error", status: false });
   }
 });
-
-
 
 // ----------------------------------------------
 // Admin Routes
@@ -309,13 +320,13 @@ app.get("/manage-orders", async (req, res) => {
   try {
     // Fetch all users with userType 'User' and populate their boughtProduct
     const customers = await User.find({ userType: "User" })
-      .populate("boughtProduct")  // Populate the 'boughtProduct' field with product details
+      .populate("boughtProduct") // Populate the 'boughtProduct' field with product details
       .exec();
 
     // Return the customers' data
     res.status(200).json({
       message: "Customers retrieved successfully",
-      customers: customers.map(customer => ({
+      customers: customers.map((customer) => ({
         id: customer._id,
         username: customer.username,
         email: customer.email,
@@ -383,12 +394,12 @@ app.get("/orders", async (req, res) => {
   try {
     // Fetch all orders and only select the 'products' field
     const orders = await Order.find()
-      .select('products')  // Only return the 'products' field
-      .populate("products.product")  // Populate product details in the order
+      .select("products") // Only return the 'products' field
+      .populate("products.product") // Populate product details in the order
       .exec();
 
     // Flatten all orders into a single array of products
-    const allProducts = orders.flatMap(order => order.products);
+    const allProducts = orders.flatMap((order) => order.products);
 
     // Calculate totalAmount dynamically by summing product quantity * priceAtPurchase for each product
     const totalAmount = allProducts.reduce((sum, item) => {
@@ -397,17 +408,17 @@ app.get("/orders", async (req, res) => {
 
     // Return the combined products array and the calculated totalAmount
     return res.status(200).json({
-      products: allProducts,  // All products from all orders combined
-      totalAmount: totalAmount  // Total amount calculated from all products
+      products: allProducts, // All products from all orders combined
+      totalAmount: totalAmount, // Total amount calculated from all products
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "An error occurred while fetching orders" });
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching orders" });
   }
 });
-
 
 app.listen(ENV_VARS.PORT, () => {
   console.log(`Server is running on http://localhost:${ENV_VARS.PORT}`);
 });
-

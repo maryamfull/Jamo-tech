@@ -1,3 +1,5 @@
+import * as ENV from "./config.js";
+
 export const ENV_VARS = {
   PORT: 8000,
   MONGODB_URI:

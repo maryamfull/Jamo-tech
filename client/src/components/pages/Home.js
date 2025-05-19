@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Header from "./Header";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { fetchGeoLocationData, fetchIpAddress } from "../../redux/ipGeoSlice";
 import Footer from "./Footer";
 
@@ -37,7 +37,8 @@ function HomePage() {
             <div className="">
               {/* <div>IP: {ip}</div> */}
               {/* <div>Country: {geoData?.location?.country}</div> */}
-              <div>Region: {geoData?.location?.region}</div>
+              {/*<div>Region: {geoData?.location?.region}</div>*/}
+              <div>Region: Al Batinah, Shinas/Aqr</div>
             </div>
           </div>
         </div>
